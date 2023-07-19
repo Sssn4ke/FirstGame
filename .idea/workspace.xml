@@ -33,7 +33,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.MainCode">
+  <component name="RunManager" selected="Python.littleTestsForWork">
     <configuration name="MainCode" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FirstGame" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -78,8 +78,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.MainCode" />
         <item itemvalue="Python.littleTestsForWork" />
+        <item itemvalue="Python.MainCode" />
       </list>
     </recent_temporary>
   </component>
