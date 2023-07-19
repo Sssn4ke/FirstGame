@@ -20,13 +20,37 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.speedx = 0
+        self.speedy = 0
 
     def update(self):
-        self.rect.x += 5
-        self.rect.y -= 5
-        if self.rect.left > WIDTH:
-            self.rect.x = 0
-            self.rect.y = 620
+        self.speedx = 0
+        self.speedy = 0
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_a]:
+            self.speedx = -8
+        if keystate[pygame.K_d]:
+            self.speedx = 8
+        self.rect.x += self.speedx
+
+        if keystate[pygame.K_w]:
+            self.speedy = -8
+        if keystate[pygame.K_s]:
+            self.speedy = 8
+        self.rect.y += self.speedy
+
+        if self.rect.right > WIDTH:
+            self.rect.left = 0
+        if self.rect.left <0:
+            self.rect.right = WIDTH
+        if self.rect.top < 0:
+            self.rect.bottom = HEIGHT
+        if self.rect.bottom > HEIGHT:
+            self.rect.top = 0
+
+
+
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self):
@@ -42,6 +66,8 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
+
+
 all_sprites = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
@@ -57,8 +83,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+
     # Обновление
     all_sprites.update()
+
+
 
     # Рендеринг
     screen.fill(BLACK)
