@@ -12,7 +12,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (122, 177, 230)
 
-
+#Coords = [0] * 2
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -55,8 +55,20 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
 
         self.image.set_colorkey(BLACK)
+        global X_player
+        global Y_player
+        X_player = self.rect.x
+        Y_player = self.rect.y
+        # Mob.update(self, Coords)
+    def get_coords(self):
+        return (X_player, Y_player)
 
 
+
+# player_coord = Player()
+# X_player_coord = player_coord.X_player
+# Y_player_coord = player_coord.Y_player
+# print(X_player_coord, Y_player_coord)
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
@@ -65,9 +77,40 @@ class Mob(pygame.sprite.Sprite):
         self.image.set_colorkey(GREEN)
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(WIDTH - self.rect.width)
-        self.rect.y = random.randrange(-100, -40)
+        self.rect.y = random.randrange(0, 100)
         self.speedx = 4
         self.speedy = 4
+
+
+    # def update(self):
+    #     if (self.rect.x < 500):
+    #         self.rect.x += self.speedx
+    #     else:
+    #         self.rect.x -= self.speedx
+    #     if (self.rect.y < 500):
+    #         self.rect.y += self.speedy
+    #     else:
+    #         self.rect.y -= self.speedy
+
+    def update(self):
+        # X_player = Coords[0]
+        # Y_player = Coords[1]
+        Player.get_coords(self)
+
+        #while (self.rect.x != X_player or self.rect.y != Y_player):
+        if (abs(X_player - self.rect.x) < abs(Y_player - self.rect.y)):
+            if (X_player < self.rect.x):
+                self.rect.x -= self.speedx
+            else:
+                self.rect.x += self.speedx
+
+        if (abs(X_player - self.rect.x) > abs(Y_player - self.rect.y)):
+            if (Y_player < self.rect.y):
+                self.rect.y -= self.speedy
+            else:
+                self.rect.y += self.speedy
+
+
 
 
 
@@ -97,8 +140,13 @@ image_player4 = pygame.transform.scale(image4, (60, 80))
 
 
 all_sprites = pygame.sprite.Group()
+mobs = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
+for i in range(3):
+    m = Mob()
+    all_sprites.add(m)
+    mobs.add(m)
 
 # Цикл игры
 running = True
@@ -117,6 +165,7 @@ while running:
 
 
 
+
     # Рендеринг
     screen.fill(BLUE)
     all_sprites.draw(screen)
@@ -124,3 +173,7 @@ while running:
     pygame.display.flip()
 
 pygame.quit()
+
+
+
+
