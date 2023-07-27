@@ -12,7 +12,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (122, 177, 230)
 
-Coords = [0] * 2
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -55,24 +55,24 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
 
         self.image.set_colorkey(BLACK)
-        # global X_player
-        # global Y_player
-        Coords[0] = self.rect.x
-        Coords[1] = self.rect.y
-        # Mob.update(self, Coords)
+        global X_player
+        global Y_player
+        X_player = self.rect.x
+        Y_player = self.rect.y
+
+    def get_coords(self):
+        return (X_player, Y_player)
 
 
 
-# player_coord = Player()
-# X_player_coord = player_coord.X_player
-# Y_player_coord = player_coord.Y_player
-# print(X_player_coord, Y_player_coord)
+
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((40, 50))
-        self.image.set_colorkey(GREEN)
+        self.image = pygame.Surface((50, 60))
+        self.image = image_bot3
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(0, 100)
@@ -80,32 +80,57 @@ class Mob(pygame.sprite.Sprite):
         self.speedy = 4
 
 
-    # def update(self):
-    #     if (self.rect.x < 500):
-    #         self.rect.x += self.speedx
-    #     else:
-    #         self.rect.x -= self.speedx
-    #     if (self.rect.y < 500):
-    #         self.rect.y += self.speedy
-    #     else:
-    #         self.rect.y -= self.speedy
+
 
     def update(self):
-        X_player = Coords[0]
-        Y_player = Coords[1]
+
+        Player.get_coords(self)
 
         #while (self.rect.x != X_player or self.rect.y != Y_player):
-        if (abs(X_player - self.rect.x) < abs(Y_player - self.rect.y)):
-            if (X_player < self.rect.x):
-                self.rect.x -= self.speedx
-            else:
-                self.rect.x += self.speedx
+        if (X_player == self.rect.x or Y_player == self.rect.y):
+            if (X_player == self.rect.x and Y_player - self.rect.y > 0):
+                self.image = image_bot3
+            elif (X_player == self.rect.x and Y_player - self.rect.y < 0):
+                self.image = image_bot1
+            elif (Y_player == self.rect.y and X_player - self.rect.x > 0):
+                self.image = image_bot2
+            elif (Y_player == self.rect.y and X_player - self.rect.x < 0):
+                self.image = image_bot4
+        elif (X_player != self.rect.x or Y_player != self.rect.y):
+            if (abs(X_player - self.rect.x) <= abs(Y_player - self.rect.y)):
+                if (abs(X_player - self.rect.x) < 4):
+                    if (X_player < self.rect.x):
+                        self.rect.x -= abs(X_player - self.rect.x)
+                        self.image = image_bot4
+                    else:
+                        self.rect.x += abs(X_player - self.rect.x)
+                        self.image = image_bot2
+                if (X_player < self.rect.x):
+                    self.rect.x -= self.speedx
+                    self.image = image_bot4
+                else:
+                    self.rect.x += self.speedx
+                    self.image = image_bot2
 
-        if (abs(X_player - self.rect.x) > abs(Y_player - self.rect.y)):
-            if (Y_player < self.rect.y):
-                self.rect.y -= self.speedy
-            else:
-                self.rect.y += self.speedy
+            if (abs(X_player - self.rect.x) > abs(Y_player - self.rect.y)):
+                if (abs(Y_player - self.rect.y) < 4):
+                    if (Y_player < self.rect.y):
+                        self.rect.y -= abs(Y_player - self.rect.y)
+                        self.image = image_bot1
+                    else:
+                        self.rect.y += abs(Y_player - self.rect.y)
+                        self.image = image_bot3
+                if (Y_player < self.rect.y):
+                    self.rect.y -= self.speedy
+                    self.image = image_bot1
+                else:
+                    self.rect.y += self.speedy
+                    self.image = image_bot3
+
+
+
+
+        self.image.set_colorkey(BLACK)
 
 
 
@@ -117,6 +142,11 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.Surface((10, 10))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
+
+        self.speedx = 4
+        self.speedy = 4
+
+
 
 
 # Создаем игру и окно
@@ -135,12 +165,21 @@ image_player3 = pygame.transform.scale(image3, (60, 80))
 image4 = pygame.image.load('player4.png').convert_alpha()
 image_player4 = pygame.transform.scale(image4, (60, 80))
 
+image5 = pygame.image.load('bot1.png').convert_alpha()
+image_bot1 = pygame.transform.scale(image5, (60, 80))
+image6 = pygame.image.load('bot2.png').convert_alpha()
+image_bot2 = pygame.transform.scale(image6, (60, 80))
+image7 = pygame.image.load('bot3.png').convert_alpha()
+image_bot3 = pygame.transform.scale(image7, (60, 80))
+image8 = pygame.image.load('bot4.png').convert_alpha()
+image_bot4 = pygame.transform.scale(image8, (60, 80))
+
 
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
-for i in range(3):
+for i in range(1):
     m = Mob()
     all_sprites.add(m)
     mobs.add(m)
